@@ -12,6 +12,7 @@ import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 import smtplib
+import getpass
 
 #if LIVE: activates mailing list
 LIVE = False
@@ -19,6 +20,14 @@ if LIVE:
     mailing_list = []
 else:
     mailing_list = ['k.czyryca@gmail.com']
+
+
+#TODO prompt for password if not given
+
+if (len(sys.argv) == 2) :
+    password = (sys.argv[1])
+else: 
+    password = getpass.getpass()
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
@@ -30,9 +39,8 @@ def getDate():
 def setUpEmail():
     server = smtplib.SMTP("smtp.gmail.com",587)
     server.starttls()
-    server.login('umbchvzdeath@gmail.com',str(sys.argv[1]))
+    server.login('umbchvzdeath@gmail.com',password)
     return server
-    #TODO prompt for password if not given
 
 
 #assumes connection is set up
