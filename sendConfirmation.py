@@ -5,15 +5,19 @@ import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 import smtplib
+import getpass
 
-mailing_list = []
+mailing_list = ["4438049290@messaging.sprintpcs.com"]
 
 
 #prepare to send texts through emails
 server = smtplib.SMTP("smtp.gmail.com",587)
 server.starttls()
-server.login('umbchvzdeath@gmail.com',sys.argv[1])
-#TODO prompt for password instead of hardcoding in plaintext
+if(len(sys.argv)==2):
+    password = sys.argv[1]
+else:
+    password = getpass.getpass()
+server.login('umbchvzdeath@gmail.com',password)
 
 
 #assumes connection is set up 
