@@ -44,16 +44,16 @@ def setUpEmail():
 
 
 #assumes connection is set up
-def sendMessage(recipient,deaths,new_human_count):
+def sendMessage(recipient,deaths,status):
     #first, prepare the message
     if deaths > 1:
-        msg = str(deaths)+" humans died! "+str(new_human_count)+" humans, "+str(zombies)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
+        msg = str(deaths)+" humans died! "+str(status)+" umbchvz.com/playerList.php"
     elif deaths == 1:
-        msg = str(deaths)+" human died! "+str(new_human_count)+" humans, "+str(zombies)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
-
+        msg = str(deaths)+" human died! "+str(status)+" umbchvz.com/playerList.php"
     else:
         print "strange # of deaths: "+str(deaths)
-        msg = str(deaths)+"? human(s) died! Don't forget to ask if people are clean! umbchvz.com/playerList.php"
+        msg = str(deaths)+"? humans died! "+str(status)+" umbchvz.com/playerList.php"
+
         
     #then send it
     try:
@@ -66,7 +66,7 @@ def sendMessage(recipient,deaths,new_human_count):
             print 'Trying once more to send to '+str(recipient)
             server.sendmail('umbchvzdeath@gmail.com',recipient,msg)
             print 'And succeeded.'
-        except:
+        except Exception:
             print "But still couldn't"
 
 
@@ -92,17 +92,29 @@ while True:
     #retrieve stats    
     date = getDate()
     site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read())
-    stats = re.findall('[0-9]+ Humans*, and [0-9]+ Zombies*', site.get_text()) 
+    stats = re.findall('[0-9]+ Humans*, and [0-9]+ Zombies*.*?[.]', site.get_text()) 
+    stats = str(stats[0])
     #log stats to file and console
-    f.write('at '+date+': '+str(stats[0])+'\n') 
-    print 'wrote: at '+date+': '+str(stats) 
-    counts = [int(number) for number in stats[0].split() if number.isdigit()]
+    f.write('at '+date+': '+stats+'\n') 
+    print 'wrote: at '+date+': '+stats 
+
 
     #Check humans alive
     #if the number has gone down, alert everyone
-    regex_pat =  '[0-9]+'
+    counts = [int(number) for number in stats.split() if number.isdigit()]
     new_human_count = counts[0]
     zombies = counts[1]
+
+    #handles OZs
+    OZs = 0
+    if(re.search("the OZ",stats)):
+        OZs = 1
+    else: 
+        try:
+            OZs = counts[2]
+        except IndexError:
+            pass #give up and leave it at 0
+
 
     #if it's not the first time, check for deaths
     #if it's the first time through the loop, initialize old_human_count
@@ -111,10 +123,10 @@ while True:
     else:
         old_human_count = new_human_count
         deaths = -1 * new_human_count #negative deaths = births?
-    print "DEBUG: old: "+str(old_human_count)+" new: "+str(new_human_count)+" deaths: "+str(deaths) + " zombies:"+str(zombies)
+    print "DEBUG: old: "+str(old_human_count)+" new: "+str(new_human_count)+" deaths: "+str(deaths) + " zombies:"+str(zombies) + " OZs: "+str(OZs)
 
 
-    respondToDeaths(deaths,new_human_count);
+    respondToDeaths(deaths,new_human_count,);
     deaths = 0
 
     old_human_count = new_human_count
