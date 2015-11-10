@@ -47,9 +47,9 @@ def setUpEmail():
 def sendMessage(recipient,deaths,new_human_count):
     #first, prepare the message
     if deaths > 1:
-        msg = str(deaths)+" humans died! "+str(new_human_count)+" humans, "+str(51-new_human_count)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
+        msg = str(deaths)+" humans died! "+str(new_human_count)+" humans, "+str(zombies)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
     elif deaths == 1:
-        msg = str(deaths)+" human died! "+str(new_human_count)+" humans, "+str(51-new_human_count)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
+        msg = str(deaths)+" human died! "+str(new_human_count)+" humans, "+str(zombies)+" zombies. Ask if people are clean! umbchvz.com/playerList.php"
 
     else:
         print "strange # of deaths: "+str(deaths)
@@ -61,7 +61,8 @@ def sendMessage(recipient,deaths,new_human_count):
         server.sendmail('umbchvzdeath@gmail.com',recipient,msg)
     except Exception:
         server = setUpEmail()
-        try:
+        try: #this fails randomly sometimes. My apartment has sketchy internet
+            sleep(10)
             print 'Trying once more to send to '+str(recipient)
             server.sendmail('umbchvzdeath@gmail.com',recipient,msg)
             print 'And succeeded.'
@@ -70,6 +71,7 @@ def sendMessage(recipient,deaths,new_human_count):
 
 
 #args: int deaths -- the number of people who've died since last update
+#
 def respondToDeaths(deaths,new_human_count):
     if deaths > 0: #DED 
         print str(deaths)+" deaths!"
@@ -92,23 +94,24 @@ while True:
     site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read())
     stats = re.findall('[0-9]+ Humans*, and [0-9]+ Zombies*', site.get_text()) 
     #log stats to file and console
-    f.write('at '+date+': '+stats[0]+'\n') 
+    f.write('at '+date+': '+str(stats[0])+'\n') 
     print 'wrote: at '+date+': '+str(stats) 
+    counts = [int(number) for number in stats[0].split() if number.isdigit()]
 
     #Check humans alive
     #if the number has gone down, alert everyone
     regex_pat =  '[0-9]+'
-    new_human_count = int((re.search(regex_pat, str(stats[0]))).group(0))
+    new_human_count = counts[0]
+    zombies = counts[1]
 
     #if it's not the first time, check for deaths
     #if it's the first time through the loop, initialize old_human_count
     if old_human_count != 0:
         deaths = old_human_count - new_human_count
-        #new_human_count = old_human_count
     else:
         old_human_count = new_human_count
         deaths = -1 * new_human_count #negative deaths = births?
-    print "DEBUG: old: "+str(old_human_count)+"new: "+str(new_human_count)+"deaths: "+str(deaths)
+    print "DEBUG: old: "+str(old_human_count)+" new: "+str(new_human_count)+" deaths: "+str(deaths) + " zombies:"+str(zombies)
 
 
     respondToDeaths(deaths,new_human_count);
@@ -116,8 +119,8 @@ while True:
 
     old_human_count = new_human_count
         
-    #check again in 5 minutes
-    sleep(5*60) 
+    #check again in 60 seconds
+    sleep(60) 
 
 
 
