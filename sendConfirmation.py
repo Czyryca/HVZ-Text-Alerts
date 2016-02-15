@@ -7,8 +7,7 @@ from bs4 import BeautifulSoup
 import smtplib
 import getpass
 
-mailing_list = ["4438049290@messaging.sprintpcs.com"]
-
+mailing_list = ["k.czyryca@gmail.com"]
 
 #prepare to send texts through emails
 server = smtplib.SMTP("smtp.gmail.com",587)

@@ -12,10 +12,12 @@ import datetime
 from time import sleep
 from bs4 import BeautifulSoup
 import smtplib
-import getpass
+from getpass import getpass
+from parser import parser
+from HTMLParser import HTMLParser
 
 #if LIVE: activates mailing list
-LIVE = False
+LIVE = True
 if LIVE:
     mailing_list = []
 else:
@@ -23,15 +25,49 @@ else:
 
 
 #TODO prompt for password if not given
-
 if (len(sys.argv) == 2) :
     password = (sys.argv[1])
 else: 
-    password = getpass.getpass()
+    password = getpass()
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
     return str(datetime.datetime.now().strftime('%d %B %Y %I:%M%p'))
+
+#given the dicts of player status,
+#returns a string summarizing changes 
+def compareDict(old_dict,new_dict):
+    joining = []
+    dying = []
+    revived = []
+    revealed_OZs = []
+    for player in new_dict:
+        if (player not in old_dict.keys()):#new player joining
+            joining.append(player)
+        elif new_dict[player] == old_dict[player]:#no change, most common case
+            continue
+        elif (new_dict[player]=='zombie' and old_dict[player]=='human'):#ded 
+            dying.append(player)
+        elif (new_dict[player]=='human' and old_dict[player]=='zombie'):#ununded
+            revived.append(player)
+        elif (new_dict[player]=='OZ' and old_dict[player]=='human'):#dirty OZs
+            revealed_OZs.append(player)
+        else:
+            print 'check compare dict' #its 3 AM TODO
+    #return the results of the diff
+    result = ''
+    if (len(joining)>0):
+        result += 'Joining: '+(','.join(joining))+' '
+    if (len(dying)>0):
+        result += 'Dying: '+(','.join(dying))+' '
+    if (len(joining)>0):
+        result += 'Revived?!?: '+(','.join(revived))+' '
+    if (len(revealed_OZs)>0):
+        result += 'Revealed OZ: '+(','.join(revealed_OZs))+' '
+    print result
+    return result 
+    
+        
 
 #prepare to send texts through emails
 #Currently hardcoded to log into umbchvzdeath@gmail.com
@@ -44,21 +80,24 @@ def setUpEmail():
 
 
 #assumes connection is set up
-def sendMessage(recipient,deaths,status):
+def sendMessage(recipient,deaths,status,change):
     #first, prepare the message
+    print change.strip()
     if deaths > 1:
-        msg = str(deaths)+" humans died! "+str(status)+" umbchvz.com/playerList.php"
+        msg = str(deaths)+" humans died! "+str(change)
     elif deaths == 1:
-        msg = str(deaths)+" human died! "+str(status)+" umbchvz.com/playerList.php"
+        msg = str(deaths)+" human died! "+str(change)
     else:
         print "strange # of deaths: "+str(deaths)
-        msg = str(deaths)+"? humans died! "+str(status)+" umbchvz.com/playerList.php"
+        msg = str(deaths)+"? humans died! "+str(change)
+    print "change: "+str(change)
+    print "sending message: "+str(msg)
 
         
     #then send it
     try:
         server = setUpEmail()
-        server.sendmail('umbchvzdeath@gmail.com',recipient,msg)
+        server.sendmail('umbchvzdeath@gmail.com',recipient,str(msg))
     except Exception:
         server = setUpEmail()
         try: #this fails randomly sometimes. My apartment has sketchy internet
@@ -72,13 +111,14 @@ def sendMessage(recipient,deaths,status):
 
 #args: int deaths -- the number of people who've died since last update
 #
-def respondToDeaths(deaths,new_human_count):
+def respondToDeaths(deaths,status,change):
     if deaths > 0: #DED 
         print str(deaths)+" deaths!"
         for number in mailing_list:
-            sendMessage(number,deaths,new_human_count)
+            sendMessage(number,deaths,status,change)
     elif deaths < 0: #explains 'births', either players joining or initializing
         print 'There are now '+str(new_human_count)+' players.'
+    
 
     
 
@@ -88,10 +128,15 @@ server = setUpEmail()
 f = open('stats','a')
 old_human_count = 0
 
+#Parser to determine player status
+old_players = {}
+
 while True:
     #retrieve stats    
     date = getDate()
     site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read())
+    my_parser = parser()
+    my_parser.feed(str(site))
     stats = re.findall('[0-9]+ Humans*, and [0-9]+ Zombies*.*?[.]', site.get_text()) 
     stats = str(stats[0])
     #log stats to file and console
@@ -104,6 +149,7 @@ while True:
     counts = [int(number) for number in stats.split() if number.isdigit()]
     new_human_count = counts[0]
     zombies = counts[1]
+    new_players = my_parser.getPlayers()
 
     #handles OZs
     OZs = 0
@@ -120,16 +166,25 @@ while True:
     #if it's the first time through the loop, initialize old_human_count
     if old_human_count != 0:
         deaths = old_human_count - new_human_count
+
     else:
+        old_players = new_players
         old_human_count = new_human_count
         deaths = -1 * new_human_count #negative deaths = births?
     print "DEBUG: old: "+str(old_human_count)+" new: "+str(new_human_count)+" deaths: "+str(deaths) + " zombies:"+str(zombies) + " OZs: "+str(OZs)
 
-
-    respondToDeaths(deaths,new_human_count,);
-    deaths = 0
-
+    change = str(compareDict(old_players,new_players))
+    if deaths!=0:
+        respondToDeaths(deaths,stats,change);
+        deaths = 0
+    
+ 
+    if change:
+        print 'Diff: '+change
     old_human_count = new_human_count
+
+
+    old_players = new_players
         
     #check again in 60 seconds
     sleep(60) 

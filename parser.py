@@ -1,4 +1,5 @@
 from HTMLParser import HTMLParser
+import copy
 
 class parser(HTMLParser):
     lastData = ''
@@ -14,5 +15,7 @@ class parser(HTMLParser):
         self.lastData = data
 
     def getPlayers(self):
-        return self.players
+        temp = copy.deepcopy(self.players)
+        self.players = {}
+        return temp
     
