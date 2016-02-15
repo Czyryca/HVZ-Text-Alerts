@@ -63,6 +63,8 @@ def compareDict(old_dict,new_dict):
         result += 'Revealed OZ: '+(','.join(revealed_OZs))+' '
     return result.strip(), human_count, zombie_count
 
+
+#TODO: untested, but does this need to be tested?
 #prepare to send texts through emails
 #Currently hardcoded to log into umbchvzdeath@gmail.com
 #returns the smtp server
@@ -72,6 +74,52 @@ def setUpEmail():
     server.login('umbchvzdeath@gmail.com',password)
     return server
 
+
+
+
+
+
+
+
+#assumes connection is set up
+def sendMessage(recipient,deaths,status,change):
+    #first, prepare the message
+    print change.strip()
+    if deaths > 1:
+        msg = str(deaths)+" humans died! "+str(change)
+    elif deaths == 1:
+        msg = str(deaths)+" human died! "+str(change)
+    else:
+        print "strange # of deaths: "+str(deaths)
+        msg = str(deaths)+"? humans died! "+str(change)
+    print "change: "+str(change)
+    print "sending message: "+str(msg)
+
+        
+    #then send it
+    try:
+        server = setUpEmail()
+        server.sendmail('umbchvzdeath@gmail.com',recipient,str(msg))
+    except Exception:
+        server = setUpEmail()
+        try: #this fails randomly sometimes. My apartment has sketchy internet
+            sleep(10)
+            print 'Trying once more to send to '+str(recipient)
+            server.sendmail('umbchvzdeath@gmail.com',recipient,msg)
+            print 'And succeeded.'
+        except Exception:
+            print "But still couldn't"
+
+
+#args: int deaths -- the number of people who've died since last update
+#
+def respondToDeaths(deaths,status,change):
+    if deaths > 0: #DED 
+        print str(deaths)+" deaths!"
+        for number in mailing_list:
+            sendMessage(number,deaths,status,change)
+    elif deaths < 0: #explains 'births', either players joining or initializing
+        print 'There are now '+str(new_human_count)+' players.'
 
 
 
