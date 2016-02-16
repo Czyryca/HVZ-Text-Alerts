@@ -9,11 +9,6 @@ from getpass import getpass
 from parser import parser
 from HTMLParser import HTMLParser
 
-def getPassword():
-    if (len(sys.argv) == 2) :
-        password = (sys.argv[1])
-    else: 
-        password = getpass()
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
@@ -50,7 +45,8 @@ def compareDict(old_dict,new_dict):
         elif (new_dict[player]=='OZ' and old_dict[player]=='human'):#dirty OZs
             revealed_OZs.append(player)
         else:
-            print 'check compare dict' #its 3 AM TODO
+            print 'finish compare dict' #its 3 AM TODO
+
     #return the results of the diff
     result = ''
     if (len(joining)>0):
@@ -65,6 +61,7 @@ def compareDict(old_dict,new_dict):
 
 
 #TODO: untested, but does this need to be tested?
+#If it breaks, I'll know when I launch the script. Can't fail later.
 #prepare to send texts through emails
 #Currently hardcoded to log into umbchvzdeath@gmail.com
 #returns the smtp server
@@ -80,7 +77,7 @@ def setUpEmail():
 
 
 
-
+#TODO: depreciated. 
 #assumes connection is set up
 def sendMessage(recipient,deaths,status,change):
     #first, prepare the message
@@ -111,6 +108,8 @@ def sendMessage(recipient,deaths,status,change):
             print "But still couldn't"
 
 
+
+#TODO: untested
 #args: int deaths -- the number of people who've died since last update
 #
 def respondToDeaths(deaths,status,change):
