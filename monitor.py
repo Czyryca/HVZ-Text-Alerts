@@ -16,6 +16,9 @@ from getpass import getpass
 from parser import parser
 from HTMLParser import HTMLParser
 from library import *
+import os
+
+
 
 #if LIVE: activates mailing list
 LIVE = False
@@ -29,12 +32,14 @@ else:
 #Prompt is much safer than passing it as a command line arg,
 #but command line arg is supported.
 if (len(sys.argv) == 2) :
-    password = (sys.argv[1])
+    #password = (sys.argv[1])
+    pass
 else: 
-    password = getpass()
+    pass
+    #password = getpass()
     
 def main():
-    server = setUpEmail()
+    first_run = True
 
     #file for logging human and zombie counts
     f = open('stats','a')
@@ -53,12 +58,17 @@ def main():
         
         change,humans,zombies = compareDict(old_players,new_players)
         
-        if change:
+        if change and not first_run:
             print change
-            stats = 'at '+getDate()+': '+humans+' Humans, and '+zombies+' Zombies\n'
+            stats = 'at '+getDate()+': '+str(humans)+' Humans, and '+str(zombies)+' Zombies\n'
             f.write(stats) 
             print stats 
-            #TODO: send message.
+            #send message in groupme
+            message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
+            command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : \"6aff2df273686bb5c617d7aff7\"}' https://api.groupme.com/v3/bots/post"
+            os.system(command)
+        else:
+            first_run = false
 
         old_players = new_players
         #check again in 60 seconds
