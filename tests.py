@@ -1,6 +1,6 @@
 import unittest
 from library import *
-
+import os
 class TestCoreFunctions(unittest.TestCase):
 
     def test_getDate(self):
@@ -21,12 +21,17 @@ class TestCoreFunctions(unittest.TestCase):
         self.assertEqual(str_result,'Dying: alice')
         self.assertEqual(humans,3)
         self.assertEqual(zombies,1)
+        text = str_result + ' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
+        command = "curl -d '{\"text\" : \"" + text + "\", \"bot_id\" : \"6aff2df273686bb5c617d7aff7\"}' https://api.groupme.com/v3/bots/post"
+        self.assertEqual(os.system(command),0)
+
 
         #no change
         str_result,humans,zombies = compareDict(snapshot2,snapshot2)
         self.assertEqual(str_result,'')
         self.assertEqual(humans,3)
         self.assertEqual(zombies,1)
+
 
         str_result,humans,zombies = compareDict(snapshot2,snapshot3)
         self.assertEqual(str_result,'Dying: bob Revealed OZ: dave')
@@ -37,6 +42,7 @@ class TestCoreFunctions(unittest.TestCase):
         self.assertEqual(str_result,'Dying: carol')
         self.assertEqual(humans,0)
         self.assertEqual(zombies,4)
+
         
     def test_compareDictStrange(self):
         snapshot1 = {'alice':'zombie','bob':'human',
@@ -58,15 +64,21 @@ class TestCoreFunctions(unittest.TestCase):
 
         #test join as human
         str_result,humans,zombies = compareDict(snapshot2,snapshot3)
-        self.assertEqual(str_result,'Joining: eve')
+        self.assertEqual(str_result,'Joining as human: eve')
         self.assertEqual(humans,5)
         self.assertEqual(zombies,0)
+
         #test join as zombie
         str_result,humans,zombies = compareDict(snapshot2,snapshot4)
-        self.assertEqual(str_result,'Joining: eve')
+        self.assertEqual(str_result,'Joining as zombie: eve')
         self.assertEqual(humans,4)
         self.assertEqual(zombies,1)
 
+        #test remove players 
+        str_result,humans,zombies = compareDict(snapshot4,snapshot2)
+        self.assertEqual(str_result,'Removed: eve')
+        self.assertEqual(humans,4)
+        self.assertEqual(zombies,0)
 
 
 
