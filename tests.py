@@ -21,10 +21,11 @@ class TestCoreFunctions(unittest.TestCase):
         self.assertEqual(str_result,'Dying: alice')
         self.assertEqual(humans,3)
         self.assertEqual(zombies,1)
+        """
         text = str_result + ' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
         command = "curl -d '{\"text\" : \"" + text + "\", \"bot_id\" : \"6aff2df273686bb5c617d7aff7\"}' https://api.groupme.com/v3/bots/post"
         self.assertEqual(os.system(command),0)
-
+        """
 
         #no change
         str_result,humans,zombies = compareDict(snapshot2,snapshot2)
