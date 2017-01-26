@@ -1,43 +1,24 @@
 """
 Main file.
 Gets the number of humans and zombies in the game, 
-then contacts the mailing list if it changes.
+then posts changes to a specified GroupMe chat.
 Also logs stats at stats.txt.
 """
 
 from urllib2 import urlopen
-import sys
-import re
-import datetime
+from sys import argv
 from time import sleep
 from bs4 import BeautifulSoup
-import smtplib
 from getpass import getpass
 from parser import parser
 from HTMLParser import HTMLParser
 from library import *
-import os
+from os import system
+
+def main():
+    first_run = True
 
 
-
-#if LIVE: activates mailing list
-LIVE = False
-if LIVE:
-    mailing_list = []
-else:
-    mailing_list = ['k.czyryca@gmail.com']
-
-
-#Prompts for password if not given.
-#Prompt is much safer than passing it as a command line arg,
-#but command line arg is supported.
-if (len(sys.argv) == 2) :
-    #password = (sys.argv[1])
-    pass
-else: 
-    pass
-    #password = getpass()
-    
 def main():
     first_run = True
 
@@ -65,10 +46,11 @@ def main():
             print stats 
             #send message in groupme
             message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
-            command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : \"6aff2df273686bb5c617d7aff7\"}' https://api.groupme.com/v3/bots/post"
-            os.system(command)
+            #command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : \"f9d93ab901d96ee9532da9142c\"}' https://api.groupme.com/v3/bots/post"
+            system(command)
         else:
-            first_run = false
+            first_run = False
+
 
         old_players = new_players
         #check again in 60 seconds
