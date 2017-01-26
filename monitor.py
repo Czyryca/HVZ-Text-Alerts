@@ -15,6 +15,9 @@ from HTMLParser import HTMLParser
 from library import *
 from os import system
 
+def main():
+    first_run = True
+
 
 def main():
     first_run = True
@@ -47,6 +50,7 @@ def main():
             system(command)
         else:
             first_run = False
+
 
         old_players = new_players
         #check again in 60 seconds
