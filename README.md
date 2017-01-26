@@ -1,5 +1,5 @@
 # HVZ-Text-Alerts
-Python script that sends texts through email to those on mailing list when server reports deaths
+Python script that sends texts through email to those on mailing list when the game server (umbchvz.com) reports deaths
 
 Both scripts expect the password to umbchvzdeath@gmail.com to be the first argument. 
 monitor.py is the main script to be run during week-longs.
