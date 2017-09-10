@@ -1,0 +1,70 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link rel="icon" type="image/png" href="images/hvzLogo.png"/><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UMBC HvZ</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'/>
+<script type="text/javascript">
+var today = new Date();
+today.setHours(12);
+today.setMinutes(24);
+today.setSeconds(21);
+
+function startTime(){
+	t=setTimeout('startTime()',1000);
+	var h=today.getHours();
+	var m=today.getMinutes();
+	var s=today.getSeconds();
+	// add a zero in front of numbers<10
+	var mt=	checkTime(m);
+	var st=checkTime(s);
+	document.getElementById('timeTxt').innerHTML="Current approximate server time: "+h+":"+mt+":"+st;
+	s+=1;
+	today.setSeconds(s);
+}
+
+function checkTime(i){
+	if (i<10) i="0" + i;
+	return i;
+}
+</script>
+<script type="text/javascript"src="/includes/sha256.js"></script>
+<script type="text/javascript">
+function submitLogin(){
+	salt = document.getElementById("salt").value;
+	pf = document.getElementById("loginPasswordTxt");
+	document.getElementById("loginPassword").value = SHA256(salt+SHA256(pf.value));
+	document.getElementById("loginForm").submit();
+}
+</script></head>
+<body>
+<div id="wrapper">
+		<div id="header" class="container">
+		<div id="menu">
+			<ul>
+				<li><a href="/home.php">Home</a></li><li><a href="/rules.php">The Rules</a></li><li><a href="/news.php">News</a></li><li><a href="/myProfile.php">My Profile</a></li><li class="active"><a href="/playerList.php">Players</a></li><li><a href="/about.php">FAQs</a></li><li><a href="/missionTools.php">Mission Toolkit</a></li><li><a href="/contact.php">Meet the Admins</a></li>			</ul>
+		</div>
+		<div id="logo">
+			<a href="/home.php"><image src="/images/hvzLogo.png" style="height:150px; width:150px; margin-top:20px;"></image></a>
+		</div>
+	</div>
+		<div id="page" class="container">
+		<div id="content">
+				<h2>Hello Chris!</h2>
+	<a href="/myProfile.php">My Profile</a><br/>
+		<form method="post" action="" name="logoutForm">
+		<input type="submit" name="logout" value="Log out" />
+	</form>
+	<!-- This is hooked into the JS code in the header, and gets its value set there. -->
+<div id="timeTxt" style="text-align: center;"></div><br/><br/>4 Humans, and 0 Zombies.<br/><table border=1><tr><td style="position: relative">Name</td><td style="position: relative">State</td><td style="position: relative">Profile pic</td><td style="position: relative">Kills this game</td><td style="position: relative">Days survived this game</td><td style="position: relative">Lifetime kills</td><td style="position: relative">Latest day alive</td><td style="position: relative">Favorite achievement</td></tr><tr><td style="position: relative">Tristan Adams</td><td style="position: relative">human</td><td style="position: relative"><img class="smallImg" src="/images/anon.jpg"/></td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">N/A</td><td style="position: relative"><img class="smallImg" src="images/coming_soon.gif"/></td></tr><tr><td style="position: relative">Christian Badolato</td><td style="position: relative">human</td><td style="position: relative"><img class="smallImg" src="/images/anon.jpg"/></td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">N/A</td><td style="position: relative"><img class="smallImg" src="images/coming_soon.gif"/></td></tr><tr><td style="position: relative">Jay Gordon</td><td style="position: relative">human</td><td style="position: relative"><img class="smallImg" src="/images/anon.jpg"/></td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">N/A</td><td style="position: relative"><img class="smallImg" src="images/coming_soon.gif"/></td></tr><tr><td style="position: relative">Laura Roth</td><td style="position: relative">human</td><td style="position: relative"><img class="smallImg" src="/images/anon.jpg"/></td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">0</td><td style="position: relative">N/A</td><td style="position: relative"><img class="smallImg" src="images/coming_soon.gif"/></td></tr></table>		</div>
+		<div class="clearfix">&nbsp;</div>
+	</div>
+	<div id="footer" class="container">
+		<p>UMBC HvZ REVISION: Art assets borrowed from <a href="http://www.nodethirtythree.com/">nodethirtythree</a>.-Vs</p>
+	</div>
+</div>
+</body>
+</html>
