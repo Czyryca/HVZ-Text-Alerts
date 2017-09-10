@@ -8,6 +8,7 @@ bs4 and lxml can be installed through pip.
 "pip install beautifulsoup4 xml"
 
 File Overview:
+config.xml must be edited to include your bot id from dev.groupme.com/bots before the script can run. It contains timing preferences as well.
 monitor.py is the main script to be run during weeklongs. It holds the main logic of the program. Currently, messages are sent after a 1 hour delay. 
 library.py defines functions used to manipulate data -- it contains no program logic and is separated for testing purposes.
 test.py contains unit tests for the functions defined in the library.

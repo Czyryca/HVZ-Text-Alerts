@@ -16,10 +16,25 @@ from library import *
 from os import system
 
 def main():
+    #Skips sending update to GroupMe on first pass
     first_run = True
 
+
+
+    with open("config.xml") as config_file:
+        settings = config_file.read()
+    config = BeautifulSoup(settings, "xml")
+    #bot id taken from GroupMe
+    bot_id = config.GroupMe.bot_id.get_text().strip()
+    #if true, delays the GroupMe post by delay_in_mins
+    delay_msg = bool(config.settings.delay_msg.get_text().strip())
+    delay_in_mins = config.settings.delay_in_mins.get_text().strip()
+    seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
+
+
+
     #file for logging human and zombie counts
-    f = open('stats','a')
+    f = open('stats.txt','a')
     old_players = {}
 
 
@@ -46,16 +61,17 @@ def main():
             print(stats)
             #send message in groupme
             message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
-            command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : \"f9d93ab901d96ee9532da9142c\"}' https://api.groupme.com/v3/bots/post"
-            #command += ' | at now +1 hour '
+            command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : "+str(bot_id)+"}' https://api.groupme.com/v3/bots/post"
+            if delay_msg:
+                command += " | at now + " + delay_in_mins + " minutes"
             system(command)
         else:
             first_run = False
 
 
+
         old_players = new_players
-        #check again in 60 seconds
-        sleep(60) 
+        sleep(seconds_between_checks) 
 
     f.close()
 
