@@ -10,7 +10,6 @@ from urllib2 import urlopen
 from sys import argv
 from time import sleep
 from bs4 import BeautifulSoup
-from getpass import getpass
 from parser import parser
 from HTMLParser import HTMLParser
 from library import *
@@ -48,7 +47,7 @@ def main():
             #send message in groupme
             message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
             command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : \"f9d93ab901d96ee9532da9142c\"}' https://api.groupme.com/v3/bots/post"
-            command += ' | at now +1 hour '
+            #command += ' | at now +1 hour '
             system(command)
         else:
             first_run = False
