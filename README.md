@@ -1,5 +1,5 @@
 # HVZ-Text-Alerts
-Python 2 script that sends messages through GroupMe when the game server (umbchvz.com) reports deaths. Create a GroupMe developer account, edit the botid in monitor.py, and then run monitor.py to use.
+Python 2 script that sends messages through GroupMe when the game server (umbchvz.com) reports deaths. Create a GroupMe developer account, edit the bot id in monitor.py, and then run monitor.py to use.
 
 
 Requires Python 2, BeautifulSoup4, lxml and a shell with the utilities curl and at.
