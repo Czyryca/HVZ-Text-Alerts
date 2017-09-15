@@ -26,6 +26,9 @@ def main():
     config = BeautifulSoup(settings, "xml")
     #bot id taken from GroupMe
     bot_id = config.GroupMe.bot_id.get_text().strip()
+    if bot_id == "FILL THIS IN":
+        print("You need to fill in the bot id in config.xml")
+        exit()
     #if true, delays the GroupMe post by delay_in_mins
     delay_msg = bool(config.settings.delay_msg.get_text().strip())
     delay_in_mins = config.settings.delay_in_mins.get_text().strip()
