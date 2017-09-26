@@ -46,14 +46,16 @@ def compareDict(old_dict,new_dict):
 
         elif new_dict[player] == old_dict[player]:#no change, most common case
             continue
-        elif (new_dict[player]=='zombie' and old_dict[player]=='human'):#ded 
+        elif (new_dict[player]=='zombie' and old_dict[player]=='human'):#dead 
             dying.append(player)
-        elif (new_dict[player]=='human' and old_dict[player]=='zombie'):#ununded
+        elif (new_dict[player]=='human' and old_dict[player]=='zombie'):#revived
             revived.append(player)
-        elif (new_dict[player]=='OZ' and old_dict[player]=='human'):#dirty OZs
+        elif (new_dict[player]=='OZ' and old_dict[player]=='human'):#reveal OZ
+            revealed_OZs.append(player)
+        elif (new_dict[player]=='OZ' and old_dict[player]=='zombie'):#timout OZ
             revealed_OZs.append(player)
         else:
-            print 'finish compare dict' #its 3 AM TODO
+            print 'unable to process '+player+':'+old_dict[player]+'->'new_dict[player]
 
     for player in old_dict:
         if player not in new_dict:
