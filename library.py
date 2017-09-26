@@ -55,7 +55,7 @@ def compareDict(old_dict,new_dict):
         elif (new_dict[player]=='OZ' and old_dict[player]=='zombie'):#timout OZ
             revealed_OZs.append(player)
         else:
-            print 'unable to process '+player+':'+old_dict[player]+'->'new_dict[player]
+            print 'unable to process '+player+':'+old_dict[player]+'->'+new_dict[player]
 
     for player in old_dict:
         if player not in new_dict:
