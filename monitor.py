@@ -30,8 +30,8 @@ def main():
         print("You need to fill in the bot id in config.xml")
         exit()
     #if true, delays the GroupMe post by delay_in_mins
-    delay_msg = bool(config.settings.delay_msg.get_text().strip())
-    delay_in_mins = config.settings.delay_in_mins.get_text().strip()
+    delay_msg = config.settings.delay_msg.get_text().strip() == "True"
+    delay_in_mins = int(config.settings.delay_in_mins.get_text().strip())
     seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
 
 
