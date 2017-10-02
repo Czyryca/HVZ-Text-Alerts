@@ -20,12 +20,11 @@ def main():
     first_run = True
 
 
-
     with open("config.xml") as config_file:
         settings = config_file.read()
     config = BeautifulSoup(settings, "xml")
     #bot id taken from GroupMe
-    bot_id = config.GroupMe.bot_id.get_text().strip()
+    bot_id = str(config.GroupMe.bot_id.get_text().strip())
     if bot_id == "FILL THIS IN":
         print("You need to fill in the bot id in config.xml")
         exit()
@@ -33,6 +32,12 @@ def main():
     delay_msg = config.settings.delay_msg.get_text().strip() == "True"
     delay_in_mins = int(config.settings.delay_in_mins.get_text().strip())
     seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
+    command = "curl -d '{"
+    command+= '"text" : "starting", '
+    command+= '"bot_id":"'+bot_id+'"}'
+    command+= "' https://api.groupme.com/v3/bots/post"
+
+    system(command)
 
 
 
@@ -64,7 +69,8 @@ def main():
             print(stats)
             #send message in groupme
             message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
-            command = "curl -d '{\"text\" : \"" + message + "\", \"bot_id\" : "+str(bot_id)+"}' https://api.groupme.com/v3/bots/post"
+            command = "curl -d '{\"text\" : \"" + message + "\",\"bot_id\" : "+str(bot_id)+"}' https://api.groupme.com/v3/bots/post"
+            print(command)
             if delay_msg:
                 command += " | at now + " + delay_in_mins + " minutes"
             system(command)
