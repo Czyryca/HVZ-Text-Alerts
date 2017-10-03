@@ -69,8 +69,10 @@ def main():
             print(stats)
             #send message in groupme
             message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
-            command = "curl -d '{\"text\" : \"" + message + "\",\"bot_id\" : "+str(bot_id)+"}' https://api.groupme.com/v3/bots/post"
-            print(command)
+            command = "curl -d '{"
+            command+= '"text" : "'+message+'", '
+            command+= '"bot_id":"'+bot_id+'"}'
+            command+= "' https://api.groupme.com/v3/bots/post"
             if delay_msg:
                 command += " | at now + " + delay_in_mins + " minutes"
             system(command)
