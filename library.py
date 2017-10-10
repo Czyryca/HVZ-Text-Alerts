@@ -1,14 +1,5 @@
-from urllib2 import urlopen
-import sys
-import re
 import datetime
-from time import sleep
-from bs4 import BeautifulSoup
-import smtplib
-from getpass import getpass
-from parser import parser
-from HTMLParser import HTMLParser
-
+import BeautifulSoup 
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
