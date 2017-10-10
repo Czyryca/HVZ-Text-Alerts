@@ -24,7 +24,7 @@ def main():
     #get yours from https://dev.groupme.com/bots
     bot_id = settings['bot_id'].strip()
     if bot_id == "FILL THIS IN":
-        print("You need to fill in the bot id in config.xml")
+        print("You need to fill in the bot id in config.json")
         exit()
     elif len(bot_id) != 26:
         print("Check your bot_id in config.json. It should be 26 characters.")
