@@ -7,37 +7,32 @@ Also logs stats at stats.txt.
 
 from __future__ import print_function
 from urllib2 import urlopen
+from sys import argv
 from time import sleep
-from os import system
-import json 
+from bs4 import BeautifulSoup
+from parser import parser
+from HTMLParser import HTMLParser
 from library import *
+from os import system
 
 def main():
     #Skips sending update to GroupMe on first pass
     first_run = True
 
 
-    with open("config.json") as config_file:
-        settings = json.load(config_file)
-
-    #basic checks for bot id from GroupMe
-    #get yours from https://dev.groupme.com/bots
-    bot_id = settings['bot_id'].strip()
+    with open("config.xml") as config_file:
+        settings = config_file.read()
+    config = BeautifulSoup(settings, "xml")
+    #bot id taken from GroupMe
+    bot_id = str(config.GroupMe.bot_id.get_text().strip())
     if bot_id == "FILL THIS IN":
         print("You need to fill in the bot id in config.xml")
         exit()
-    elif len(bot_id) != 26:
-        print("Check your bot_id in config.json. It should be 26 characters.")
-        exit()
-
     #if true, delays the GroupMe post by delay_in_mins
-    #Should be unnecessary, but the server-side delay isn't working
-    delay_msg = settings['delay_msg']
-    delay_in_mins = settings['delay_in_mins']
-    seconds_between_checks = settings['seconds_between_checks']
+    delay_msg = config.settings.delay_msg.get_text().strip() == "True"
+    delay_in_mins = int(config.settings.delay_in_mins.get_text().strip())
+    seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
 
-    #No ID provided? Defaults to current game
-    game_id = settings['game_id']
 
 
     #file for logging human and zombie counts
@@ -46,12 +41,11 @@ def main():
 
 
     while True:
-        #Use API to get json dict, retrieve stats    
-        if settings['game_id']== "":
-            site = urlopen('https://umbchvz.com/api/longGamePlayerList.php')
-        else:
-            site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
-        new_players = json.loads(site.read())
+        #Parse site, retrieve stats    
+        site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read())
+        my_parser = parser()
+        my_parser.feed(str(site))
+        new_players = my_parser.getPlayers()
 
         if not(new_players): #if dict is empty
             print("Didn't find any players")
