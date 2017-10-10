@@ -5,7 +5,6 @@ from os import system
 def getDate():
     return str(datetime.datetime.now().strftime('%d %B %Y %I:%M%p'))
 
-#delay is in monitor.py, if on
 def sendMessage(message,bot_id,delay_msg,delay_in_mins):
     command = "curl -d '{"
     command+= '"text" : "'+message+'", '
