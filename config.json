@@ -1,0 +1,7 @@
+{
+    "bot_id":"3e417d0309a3cea0e3263dc78e",
+    "game_id":"LG0000f",
+    "delay_msg":false,
+    "delay_in_mins":60,
+    "seconds_between_checks":60
+}
