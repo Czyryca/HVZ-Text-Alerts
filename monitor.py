@@ -32,6 +32,12 @@ def main():
     delay_msg = config.settings.delay_msg.get_text().strip() == "True"
     delay_in_mins = int(config.settings.delay_in_mins.get_text().strip())
     seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
+    command = "curl -d '{"
+    command+= '"text" : "starting", '
+    command+= '"bot_id":"'+bot_id+'"}'
+    command+= "' https://api.groupme.com/v3/bots/post"
+
+    system(command)
 
 
 
