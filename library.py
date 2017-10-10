@@ -1,10 +1,20 @@
 import datetime
-import BeautifulSoup 
+from os import system
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
     return str(datetime.datetime.now().strftime('%d %B %Y %I:%M%p'))
 
+#delay is in monitor.py, if on
+def sendMessage(message,bot_id,delay_msg,delay_in_mins):
+    command = "curl -d '{"
+    command+= '"text" : "'+message+'", '
+    command+= '"bot_id":"'+bot_id+'"}'
+    command+= "' https://api.groupme.com/v3/bots/post"
+    if delay_msg:
+        command += " | at now + " + delay_in_mins + " minutes"
+    system(command)
+    
 
 #given the dicts of player status of format dict[player] -> human | zombie | OZ
 #returns a string summarizing changes,count of humans, count of zombies
