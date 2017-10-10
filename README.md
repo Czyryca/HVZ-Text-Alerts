@@ -5,7 +5,7 @@ File Overview:
 
 monitor.py is the main script to be run during weeklongs. It holds the main logic of the program. Currently, messages have no delay by default because the server has a 1 hour delay. 
 
-config.json must be edited to include your bot id from dev.groupme.com/bots before the script can run. It contains timing preferences as well. The game id can be chaned to test on old games EX: LG0000f .
+config.json must be edited to include your bot id from dev.groupme.com/bots before the script can run. It contains timing preferences as well. The game id can be changed to test on old games EX: LG0000f .
 
 library.py defines functions used to manipulate data -- it contains no program logic and is separated for testing purposes. test.py contains unit tests for the functions defined in the library.
 
