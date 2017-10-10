@@ -47,11 +47,19 @@ def main():
 
     while True:
         #Use API to get json dict, retrieve stats    
-        if settings['game_id']== "":
-            site = urlopen('https://umbchvz.com/api/longGamePlayerList.php')
-        else:
-            site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
-        new_players = json.loads(site.read())
+        got_data = False
+        while not got_data:
+            try:
+                if settings['game_id']== "":
+                    site = urlopen('https://umbchvz.com/api/longGamePlayerList.php')
+                else:
+                    site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
+                got_data = True
+                new_players = json.loads(site.read())
+            except URLError:
+                print("Unable to get players. Server is down?")
+                sleep(500)
+    
 
         if not(new_players): #if dict is empty
             print("Didn't find any players")
