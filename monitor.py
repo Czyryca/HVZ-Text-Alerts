@@ -55,10 +55,14 @@ def main():
                 else:
                     site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
                 got_data = True
-                new_players = json.loads(site.read())
+                site_data = json.loads(site.read())
+                new_players = site_data['players']
+                humans = site_data['humans']
+                zombies = site_data['zombies']
+                ozs = site_data['ozs']
             except URLError:
                 print("Unable to get players. Server is down?")
-                sleep(500)
+                sleep(5*60)
     
 
         if not(new_players): #if dict is empty
@@ -68,7 +72,7 @@ def main():
         #if it's not the first time, check for deaths
         #if it's the first time through the loop, initialize old_human_count
         
-        change,humans,zombies = compareDict(old_players,new_players)
+        change,humans_count,zombies_count = compareDict(old_players,new_players)
         
         if change and not first_run:
             print(change)
@@ -76,7 +80,7 @@ def main():
             f.write(stats) 
             print(stats)
             #send message in groupme
-            message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
+            message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)+' counting '+str(ozs)+'hidden OZs.'
             sendMessage(message,bot_id,delay_msg,delay_in_mins)
 
         else:
