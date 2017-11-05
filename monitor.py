@@ -7,6 +7,7 @@ Also logs stats at stats.txt.
 
 from __future__ import print_function
 from urllib2 import urlopen
+from urllib2 import URLError
 from time import sleep
 from os import system
 import json 
