@@ -57,18 +57,18 @@ def main():
                     site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
                 got_data = True
                 site_data = json.loads(site.read())
-                new_players = site_data['players']
-                humans = site_data['humans']
-                zombies = site_data['zombies']
-                ozs = site_data['ozs']
+                try:
+                    new_players = site_data['players']
+                    humans = site_data['humans']
+                    zombies = site_data['zombies']
+                    ozs = site_data['ozs']
+                except KeyError:
+                    print("Dict is missing keys at "+getDate())
+                    print(site_data)
             except URLError:
                 print("Unable to get players. Server is down?")
                 sleep(5*60)
     
-
-        if not(new_players): #if dict is empty
-            print("Didn't find any players")
-            
 
         #if it's not the first time, check for deaths
         #if it's the first time through the loop, initialize old_human_count
