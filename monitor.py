@@ -66,7 +66,7 @@ def main():
                     print("Dict is missing keys at "+getDate())
                     print(site_data)
             except URLError:
-                print("Unable to get players. Server is down?")
+                print("Unable to get players. Server is down? "+getDate())
                 sleep(5*60)
     
 
