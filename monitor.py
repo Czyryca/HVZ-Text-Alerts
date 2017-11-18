@@ -6,10 +6,10 @@ Also logs stats at stats.txt.
 """
 
 from __future__ import print_function
-from urllib2 import urlopen
-from urllib2 import URLError
+import urllib2
 from time import sleep
 from os import system
+from pprint import pprint
 import json 
 from library import *
 
@@ -38,25 +38,32 @@ def main():
     seconds_between_checks = settings['seconds_between_checks']
 
     #No ID provided? Defaults to current game
-    game_id = settings['game_id']
+    game_id = settings['game_id'].strip()
 
 
     #file for logging human and zombie counts
     f = open('stats.txt','a')
     old_players = {}
 
+    #Use API to get json dict, retrieve stats
+    if settings['game_id']== "":
+        url = 'https://umbchvz.com/api/longGamePlayerList.php'
+    else:
+        url = 'https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id
+
 
     while True:
-        #Use API to get json dict, retrieve stats    
         got_data = False
+
         while not got_data:
             try:
-                if settings['game_id']== "":
-                    site = urlopen('https://umbchvz.com/api/longGamePlayerList.php')
-                else:
-                    site = urlopen('https://umbchvz.com/api/longGamePlayerList.php?gameID='+game_id)
+                #the server tries to send a cached page, which is NOT ok for us
+                request = urllib2.Request(url)
+                request.add_header('Pragma','no-cache')
+                content = urllib2.build_opener().open(request)
+                site_data = json.loads(content.read())
+
                 got_data = True
-                site_data = json.loads(site.read())
                 try:
                     new_players = site_data['players']
                     humans = site_data['humans']
@@ -65,11 +72,13 @@ def main():
                 except KeyError:
                     print("Dict is missing keys at "+getDate())
                     print(site_data)
-            except URLError:
+                    new_players = {}
+            except urllib2.URLError:
                 print("Unable to get players. Server is down? "+getDate())
                 sleep(5*60)
     
-
+        #pprint(new_players)
+        print(getDate())
         #if it's not the first time, check for deaths
         #if it's the first time through the loop, initialize old_human_count
         
@@ -80,8 +89,13 @@ def main():
             stats = 'at '+getDate()+': '+str(humans)+' Humans, and '+str(zombies)+' Zombies\n'
             f.write(stats) 
             print(stats)
+
             #send message in groupme
-            message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)+' counting '+str(ozs)+'hidden OZs.'
+            if ozs > 0:            
+                message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)+' with '+str(ozs)+' hidden OZs.'
+            else:
+                message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
+    
             sendMessage(message,bot_id,delay_msg,delay_in_mins)
 
         else:
