@@ -2,7 +2,7 @@
 Python 2 script that sends messages through GroupMe when the game server (umbchvz.com) reports deaths. Create a GroupMe developer account, edit the bot id in config.xml, and then run monitor.py to use. Requires Python 2, BeautifulSoup4, lxml and a shell with the utilities curl and at.
 https://www.crummy.com/software/BeautifulSoup/
 bs4 and lxml can be installed through pip.
-"pip install beautifulsoup4 xml"
+"pip install beautifulsoup4 lxml"
 
 File Overview:
 

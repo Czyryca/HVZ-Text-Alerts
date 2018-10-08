@@ -33,7 +33,7 @@ def main():
     delay_in_mins = int(config.settings.delay_in_mins.get_text().strip())
     seconds_between_checks= int(config.settings.seconds_between_checks.get_text().strip())
     command = "curl -d '{"
-    command+= '"text" : "starting", '
+    command+= '"text" : "Starting up", '
     command+= '"bot_id":"'+bot_id+'"}'
     command+= "' https://api.groupme.com/v3/bots/post"
 
@@ -48,7 +48,7 @@ def main():
 
     while True:
         #Parse site, retrieve stats    
-        site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read())
+        site = BeautifulSoup(urlopen('https://umbchvz.com/playerList.php').read(),features="lxml")
         my_parser = parser()
         my_parser.feed(str(site))
         new_players = my_parser.getPlayers()
