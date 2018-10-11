@@ -91,7 +91,7 @@ def main():
             print(stats)
 
             #send message in groupme
-            if ozs > 0:            
+            if int(ozs) > 0:            
                 message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)+' with '+str(ozs)+' hidden OZs.'
             else:
                 message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
