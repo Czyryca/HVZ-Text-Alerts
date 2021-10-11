@@ -1,19 +1,18 @@
 import datetime
+import requests
 from os import system
 
 #date format sample: 13 April 2015 02:43AM
 def getDate():
     return str(datetime.datetime.now().strftime('%d %B %Y %I:%M%p'))
 
+
 def sendMessage(message,bot_id,delay_msg,delay_in_mins):
-    command = "curl -d '{"
-    command+= '"text" : "'+message+'", '
-    command+= '"bot_id":"'+bot_id+'"}'
-    command+= "' https://api.groupme.com/v3/bots/post"
-    if delay_msg:
-        command += " | at now + " + delay_in_mins + " minutes"
-    system(command)
-    
+    data = {
+            'bot_id' : bot_id,
+            'text' : message,
+           }
+    requests.post(BOT_POSTING_URL, json=data)
 
 #given the dicts of player status of format dict[player] -> human | zombie | OZ
 #returns a string summarizing changes,count of humans, count of zombies
@@ -78,3 +77,4 @@ def compareDict(old_dict,new_dict):
     
     return result.strip(), human_count, zombie_count
 
+BOT_POSTING_URL = "https://api.groupme.com/v3/bots/post"
