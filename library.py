@@ -7,7 +7,7 @@ def getDate():
     return str(datetime.datetime.now().strftime('%d %B %Y %I:%M%p'))
 
 
-def sendMessage(message,bot_id,delay_msg,delay_in_mins):
+def sendMessage(message,bot_id):
     data = {
             'bot_id' : bot_id,
             'text' : message,
