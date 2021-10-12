@@ -31,10 +31,6 @@ def main():
         print("Check your bot_id in config.json. It should be 26 characters.")
         exit()
 
-    #if true, delays the GroupMe post by delay_in_mins
-    #Should be unnecessary, but the server-side delay isn't working
-    delay_msg = settings['delay_msg']
-    delay_in_mins = settings['delay_in_mins']
     seconds_between_checks = settings['seconds_between_checks']
 
     #No ID provided? Defaults to current game
@@ -96,7 +92,7 @@ def main():
             else:
                 message=change+' -- Humans: '+str(humans)+' Zombies: '+str(zombies)
     
-            sendMessage(message,bot_id,delay_msg,delay_in_mins)
+            sendMessage(message,bot_id)
 
         else:
             first_run = False
