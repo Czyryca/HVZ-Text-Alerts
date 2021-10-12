@@ -1,0 +1,5 @@
+*.pyc
+stats.txt
+config.json
+*.un
+*~
